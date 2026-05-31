@@ -1,1 +1,1 @@
-export { createRemindrApp } from './createApp.js'
+export { createRemindrApi } from './createApp.js'
