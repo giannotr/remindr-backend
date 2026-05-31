@@ -2,7 +2,7 @@
 
 ## Mandatory environment secrets / variables
 
-The user must provide a `.env` in the root level of the project setting containing the following keys:
+The user must provide a `.env` in the root level of the project setting (or if using Docker, a environment section in the container definition) containing the following keys:
 
 - N8N_BASE_URL
 - N8N_API_KEY
