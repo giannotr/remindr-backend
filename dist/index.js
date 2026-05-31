@@ -1,7 +1,7 @@
 // src/createApp.ts
 import express from "express";
 import cors from "cors";
-import path from "path";
+import "path";
 
 // src/routes/items.ts
 import { Router } from "express";
@@ -120,7 +120,7 @@ authRouter.post("/", async (req, res) => {
 });
 
 // src/createApp.ts
-function createRemindrApp(options) {
+function createRemindrApi(options) {
   const app = express();
   app.use(express.json());
   app.use(cors({
@@ -132,18 +132,13 @@ function createRemindrApp(options) {
   app.get("/api/health", (_req, res) => {
     res.json({ ok: true });
   });
-  app.use("/api/items", createItemsRouter(options.mapItemToRow, options.matchKey ?? "id"));
+  app.use("/api/items", createItemsRouter(
+    options.mapItemToRow,
+    options.matchKey ?? "id"
+  ));
   app.use("/api/auth", authRouter);
-  const isProduction = process.env.NODE_ENV === "production";
-  if (isProduction) {
-    const frontendDistPath = path.resolve(process.cwd(), options.clientPath);
-    app.use(express.static(frontendDistPath));
-    app.get("*", (_req, res) => {
-      res.sendFile(path.join(frontendDistPath, "index.html"));
-    });
-  }
   return app;
 }
 export {
-  createRemindrApp
+  createRemindrApi
 };

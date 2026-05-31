@@ -30,14 +30,14 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var index_exports = {};
 __export(index_exports, {
-  createRemindrApp: () => createRemindrApp
+  createRemindrApi: () => createRemindrApi
 });
 module.exports = __toCommonJS(index_exports);
 
 // src/createApp.ts
 var import_express3 = __toESM(require("express"), 1);
 var import_cors = __toESM(require("cors"), 1);
-var import_node_path = __toESM(require("path"), 1);
+var import_node_path = require("path");
 
 // src/routes/items.ts
 var import_express = require("express");
@@ -156,7 +156,7 @@ authRouter.post("/", async (req, res) => {
 });
 
 // src/createApp.ts
-function createRemindrApp(options) {
+function createRemindrApi(options) {
   const app = (0, import_express3.default)();
   app.use(import_express3.default.json());
   app.use((0, import_cors.default)({
@@ -168,19 +168,14 @@ function createRemindrApp(options) {
   app.get("/api/health", (_req, res) => {
     res.json({ ok: true });
   });
-  app.use("/api/items", createItemsRouter(options.mapItemToRow, options.matchKey ?? "id"));
+  app.use("/api/items", createItemsRouter(
+    options.mapItemToRow,
+    options.matchKey ?? "id"
+  ));
   app.use("/api/auth", authRouter);
-  const isProduction = process.env.NODE_ENV === "production";
-  if (isProduction) {
-    const frontendDistPath = import_node_path.default.resolve(process.cwd(), options.clientPath);
-    app.use(import_express3.default.static(frontendDistPath));
-    app.get("*", (_req, res) => {
-      res.sendFile(import_node_path.default.join(frontendDistPath, "index.html"));
-    });
-  }
   return app;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  createRemindrApp
+  createRemindrApi
 });
